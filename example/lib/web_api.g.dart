@@ -17,7 +17,7 @@ class _$GitHubServiceImpl extends GitHubService {
   @override
   Future<String> getDeletedUsers() {
     RestroConfig config = RestroConfig();
-    config.method = RequestMethod.POST;
-    config.url = "/user-deleted";
+    config.method = RequestMethod.GET;
+    config.url = "/user-by-name";
   }
 }

@@ -20,15 +20,12 @@ abstract class TypeHelpers {
   }
 
   static Method buildMethod(MethodElement methodElement) {
+    RestroGenConfig config = RestroGenConfig();
     var methodBuilder = MethodBuilder();
     methodBuilder.name = methodElement.name;
-    print("***********************Annotations************************");
-    RestroGenConfig config = RestroGenConfig();
     AnnotationHelpers.processMethodAnnotations(config, methodElement);
-
-    print("***********************Annotations END************************");
     for (ParameterElement parameterElement in methodElement.parameters) {
-      methodBuilder.requiredParameters.add(buildParameter(parameterElement));
+      methodBuilder.requiredParameters.add(buildParameter(config,parameterElement));
     }
     methodBuilder.annotations.add(CodeExpression(Code('override')));
     methodBuilder.returns = refer(methodElement.returnType.displayName);
@@ -42,7 +39,7 @@ abstract class TypeHelpers {
     return methodBuilder.build();
   }
 
-  static Parameter buildParameter(ParameterElement parameterElement) {
+  static Parameter buildParameter(RestroGenConfig config,ParameterElement parameterElement) {
     var parameterBuilder = ParameterBuilder();
     parameterBuilder.name = parameterElement.name;
     parameterBuilder.type = refer(parameterElement.type.displayName);

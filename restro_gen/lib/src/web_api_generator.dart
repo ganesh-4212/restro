@@ -5,7 +5,7 @@ import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 import 'type_helpers.dart';
-
+import 'restro_gen_config.dart';
 import 'package:restro/restro.dart';
 
 class WebApiGenerator extends GeneratorForAnnotation<WebApi> {

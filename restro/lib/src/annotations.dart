@@ -23,6 +23,16 @@ class DELETE {
   const DELETE([this.value = null]);
 }
 
+class HEAD {
+  final String value;
+  const HEAD([this.value = null]);
+}
+
+class PATCH {
+  final String value;
+  const PATCH([this.value = null]);
+}
+
 class Path {
   final String value;
   const Path([this.value = null]);

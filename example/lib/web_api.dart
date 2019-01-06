@@ -9,6 +9,5 @@ abstract class GitHubService{
   @GET('/user-by-name')
   Future<String> getUserName(String id);
 
-  @POST('/user-deleted')
   Future<String> getDeletedUsers();
 }
