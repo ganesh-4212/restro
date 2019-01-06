@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'package:analyzer/dart/element/element.dart';
+import 'package:analyzer/dart/element/type.dart';
 import 'package:build/src/builder/build_step.dart';
 import 'package:source_gen/source_gen.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:restro/restro.dart';
+import 'annotation_helpers.dart';
+import 'restro_gen_config.dart';
 
 abstract class TypeHelpers {
   static Class buildClass(ClassElement classElement) {
@@ -19,16 +23,22 @@ abstract class TypeHelpers {
     var methodBuilder = MethodBuilder();
     methodBuilder.name = methodElement.name;
     print("***********************Annotations************************");
-    for (ElementAnnotation elementAnnotation in methodElement.metadata) {
-      processMethodAnnotation(elementAnnotation);
-    }
+    RestroGenConfig config = RestroGenConfig();
+    AnnotationHelpers.processMethodAnnotations(config, methodElement);
+
     print("***********************Annotations END************************");
     for (ParameterElement parameterElement in methodElement.parameters) {
       methodBuilder.requiredParameters.add(buildParameter(parameterElement));
     }
     methodBuilder.annotations.add(CodeExpression(Code('override')));
     methodBuilder.returns = refer(methodElement.returnType.displayName);
-    methodBuilder.body = Code("return 'hello';");
+    
+    //Get code array from config;
+    List<Code> codes = [];
+    codes.add(Code('RestroConfig config = RestroConfig();'));
+    codes.add(Code('config.method = ${config.method};'));
+    codes.add(Code('config.url = "${config.url}";'));
+    methodBuilder.body = Block.of(codes);
     return methodBuilder.build();
   }
 
@@ -41,11 +51,17 @@ abstract class TypeHelpers {
   }
 
   static void processMethodAnnotation(ElementAnnotation elementAnnotation) {
-    print("elementAnnotation.constantValue : ${elementAnnotation.constantValue.getField('url').toStringValue()}");
-    // print("elementAnnotation.context : ${elementAnnotation.context.name}");
-    // print("elementAnnotation.source.fullName : ${elementAnnotation.source.fullName}");
-    // print("elementAnnotation.element.name : ${elementAnnotation.element.name}");
-    // print("elementAnnotation.element.displayName : ${elementAnnotation.element.displayName}");
-
+    
+    print(
+        "elementAnnotation.constantValues : ${elementAnnotation.constantValue.getField('value').toStringValue()} *****");
+        print("elementAnnotation.runtimeType : ${elementAnnotation.constantValue.type.name} *****");
+    print("elementAnnotation.runtimeType : ${elementAnnotation.runtimeType} *****");
+    print("elementAnnotation.source.fullName : ${elementAnnotation.source.fullName} *****");
+    print("elementAnnotation.element.name : ${elementAnnotation.element.name} *****");
+    print("elementAnnotation.element.displayName : ${elementAnnotation.element.displayName} *****");
+    final getTypeChecker = TypeChecker.fromRuntime(GET);
+    
+    
+    
   }
 }

@@ -9,11 +9,15 @@ part of 'web_api.dart';
 class _$GitHubServiceImpl extends GitHubService {
   @override
   Future<String> getUserName(String id) {
-    return 'hello';
+    RestroConfig config = RestroConfig();
+    config.method = RequestMethod.GET;
+    config.url = "/user-by-name";
   }
 
   @override
   Future<String> getDeletedUsers() {
-    return 'hello';
+    RestroConfig config = RestroConfig();
+    config.method = RequestMethod.POST;
+    config.url = "/user-deleted";
   }
 }
