@@ -1,3 +1,3 @@
 library restro;
 
-export 'src/web_api.dart';
+export 'src/annotations.dart';
