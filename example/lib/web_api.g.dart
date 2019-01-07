@@ -12,12 +12,14 @@ class _$GitHubServiceImpl extends GitHubService {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;
     config.url = "/user-by-name";
+    config.headers["access-token"] = "10";
+    config.headers["contentType"] = "application/json";
   }
 
   @override
   Future<String> getDeletedUsers() {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;
-    config.url = "/user-by-name";
+    config.url = "";
   }
 }

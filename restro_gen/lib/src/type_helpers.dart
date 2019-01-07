@@ -25,21 +25,26 @@ abstract class TypeHelpers {
     methodBuilder.name = methodElement.name;
     AnnotationHelpers.processMethodAnnotations(config, methodElement);
     for (ParameterElement parameterElement in methodElement.parameters) {
-      methodBuilder.requiredParameters.add(buildParameter(config,parameterElement));
+      methodBuilder.requiredParameters
+          .add(buildParameter(config, parameterElement));
     }
     methodBuilder.annotations.add(CodeExpression(Code('override')));
     methodBuilder.returns = refer(methodElement.returnType.displayName);
-    
+
     //Get code array from config;
     List<Code> codes = [];
     codes.add(Code('RestroConfig config = RestroConfig();'));
     codes.add(Code('config.method = ${config.method};'));
     codes.add(Code('config.url = "${config.url}";'));
+    config.methodHeaders.forEach((key, value) {
+      codes.add(Code('config.headers["$key"] = "${value}";'));
+    });
     methodBuilder.body = Block.of(codes);
     return methodBuilder.build();
   }
 
-  static Parameter buildParameter(RestroGenConfig config,ParameterElement parameterElement) {
+  static Parameter buildParameter(
+      RestroGenConfig config, ParameterElement parameterElement) {
     var parameterBuilder = ParameterBuilder();
     parameterBuilder.name = parameterElement.name;
     parameterBuilder.type = refer(parameterElement.type.displayName);
@@ -48,17 +53,18 @@ abstract class TypeHelpers {
   }
 
   static void processMethodAnnotation(ElementAnnotation elementAnnotation) {
-    
     print(
         "elementAnnotation.constantValues : ${elementAnnotation.constantValue.getField('value').toStringValue()} *****");
-        print("elementAnnotation.runtimeType : ${elementAnnotation.constantValue.type.name} *****");
-    print("elementAnnotation.runtimeType : ${elementAnnotation.runtimeType} *****");
-    print("elementAnnotation.source.fullName : ${elementAnnotation.source.fullName} *****");
-    print("elementAnnotation.element.name : ${elementAnnotation.element.name} *****");
-    print("elementAnnotation.element.displayName : ${elementAnnotation.element.displayName} *****");
+    print(
+        "elementAnnotation.runtimeType : ${elementAnnotation.constantValue.type.name} *****");
+    print(
+        "elementAnnotation.runtimeType : ${elementAnnotation.runtimeType} *****");
+    print(
+        "elementAnnotation.source.fullName : ${elementAnnotation.source.fullName} *****");
+    print(
+        "elementAnnotation.element.name : ${elementAnnotation.element.name} *****");
+    print(
+        "elementAnnotation.element.displayName : ${elementAnnotation.element.displayName} *****");
     final getTypeChecker = TypeChecker.fromRuntime(GET);
-    
-    
-    
   }
 }

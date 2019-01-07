@@ -18,11 +18,15 @@ abstract class AnnotationHelpers {
   static const TypeChecker _registerPatchTc =
       const TypeChecker.fromRuntime(PATCH);
 
+  static const TypeChecker _registerHeadersTc =
+      const TypeChecker.fromRuntime(Headers);
+
   static const REQUEST_METHOD_URL_PROP = 'value';
   static const WEB_API_PROP_URL = 'url';
   static void processMethodAnnotations(
       RestroGenConfig config, MethodElement methodElement) {
     processRequestMethodAnnotations(config, methodElement);
+    processMethodHeadersAnnotation(config, methodElement);
   }
 
   static bool isGet(MethodElement methodElement) {
@@ -55,6 +59,25 @@ abstract class AnnotationHelpers {
     String url = annotation.getField(WEB_API_PROP_URL).toStringValue();
     if (url != null && url.isNotEmpty) {
       config.url = url;
+    }
+  }
+
+  static void processMethodHeadersAnnotation(
+      RestroGenConfig config, MethodElement methodElement) {
+    if (_registerHeadersTc.hasAnnotationOfExact(methodElement)) {
+      final annotations =
+          _registerHeadersTc.firstAnnotationOfExact(methodElement);
+      final headersMap =
+          annotations.getField(REQUEST_METHOD_URL_PROP).toMapValue();
+      headersMap.forEach((key, value) {
+        String headerName = key.toStringValue();
+        String headerValue = value.toStringValue();
+        if (headerName != null &&
+            headerName.isNotEmpty &&
+            headerValue != null &&
+            headerValue.isNotEmpty)
+          config.methodHeaders[headerName] = headerValue;
+      });
     }
   }
 
