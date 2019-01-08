@@ -3,6 +3,7 @@ import 'package:code_builder/code_builder.dart';
 import 'annotation_helpers.dart';
 import 'restro_gen_config.dart';
 import 'utils.dart';
+import 'method_code_builder.dart';
 
 abstract class TypeHelpers {
   static Class buildClass(ClassElement classElement) {
@@ -28,15 +29,8 @@ abstract class TypeHelpers {
     methodBuilder.annotations.add(CodeExpression(Code('override')));
     methodBuilder.returns = refer(methodElement.returnType.displayName);
     Utils.buildUrlFromPathParameter(config);
-    //Get code array from config;
-    List<Code> codes = [];
-    codes.add(Code('RestroConfig config = RestroConfig();'));
-    codes.add(Code('config.method = ${config.method};'));
-    codes.add(Code('config.url = "${config.url}";'));
-    config.methodHeaders.forEach((key, value) {
-      codes.add(Code('config.headers["$key"] = "${value}";'));
-    });
-    methodBuilder.body = Block.of(codes);
+    methodBuilder.body =
+        Block.of(MethodCodeBuilder.buildCodeFromConfig(config));
     return methodBuilder.build();
   }
 
@@ -45,8 +39,14 @@ abstract class TypeHelpers {
     var parameterBuilder = ParameterBuilder();
     parameterBuilder.name = parameterElement.name;
     parameterBuilder.type = refer(parameterElement.type.displayName);
-    AnnotationHelpers.processMethodParamPathAnnotation(
-        config, parameterElement);
+    bool isAnnotationProcessed =
+        AnnotationHelpers.processMethodParamPathAnnotation(
+            config, parameterElement);
+    if (isAnnotationProcessed == false) {
+      isAnnotationProcessed = AnnotationHelpers.processQueryParamAnnotation(
+          config, parameterElement);
+    }
+
     return parameterBuilder.build();
   }
 }

@@ -24,6 +24,9 @@ abstract class AnnotationHelpers {
   static const TypeChecker _registerPathTc =
       const TypeChecker.fromRuntime(Path);
 
+  static const TypeChecker _registerQueryTc =
+      const TypeChecker.fromRuntime(Query);
+
   static const REQUEST_METHOD_URL_PROP = 'value';
   static const WEB_API_PROP_URL = 'url';
   static void processMethodAnnotations(
@@ -113,7 +116,7 @@ abstract class AnnotationHelpers {
     }
   }
 
-  static void processMethodParamPathAnnotation(
+  static bool processMethodParamPathAnnotation(
       RestroGenConfig config, ParameterElement parameterElement) {
     if (_registerPathTc.hasAnnotationOfExact(parameterElement)) {
       final pathVariableValueObj = _registerPathTc
@@ -128,7 +131,34 @@ abstract class AnnotationHelpers {
       }
       if (parameterName != null && parameterName.isNotEmpty) {
         config.parameterPathMap[pathVariableValue] = parameterName;
+        return true;
       }
     }
+    return false;
+  }
+
+  static bool processQueryParamAnnotation(
+      RestroGenConfig config, ParameterElement parameterElement) {
+    String parameterName = parameterElement.name;
+    String queryFieldName = parameterName;
+    if (_registerQueryTc.hasAnnotationOfExact(parameterElement)) {
+      final queryFieldObj = _registerQueryTc
+          .firstAnnotationOfExact(parameterElement)
+          .getField(REQUEST_METHOD_URL_PROP);
+
+      if (queryFieldObj != null &&
+          queryFieldObj.toStringValue() != null &&
+          queryFieldObj.toStringValue().isNotEmpty) {
+        queryFieldName = queryFieldObj.toStringValue();
+      }
+      if (parameterName != null && parameterName.isNotEmpty) {
+        config.queryMap[queryFieldName] = parameterName;
+        return true;
+      }
+    } else if (parameterElement.metadata.isEmpty) {
+      config.queryMap[queryFieldName] = parameterName;
+      return true;
+    }
+    return false;
   }
 }
