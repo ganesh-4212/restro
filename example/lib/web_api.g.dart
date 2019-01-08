@@ -8,18 +8,18 @@ part of 'web_api.dart';
 
 class _$GitHubServiceImpl extends GitHubService {
   @override
-  Future<String> getUserName(String repoIds, String id) {
+  Future<String> getUserName(String repoIds, String id, String userId) {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;
-    config.url = "/user-by-name/$id/repository/:repoId";
+    config.url = "/secure/users/$userId/user-by-name/$id/repository/$repoIds";
     config.headers["access-token"] = "10";
     config.headers["contentType"] = "application/json";
   }
 
   @override
-  Future<String> getDeletedUsers() {
+  Future<String> getDeletedUsers(String userId) {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;
-    config.url = "";
+    config.url = "/secure/users/$userId";
   }
 }

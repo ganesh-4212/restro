@@ -56,13 +56,10 @@ abstract class AnnotationHelpers {
     return _registerPatchTc.hasAnnotationOfExact(methodElement);
   }
 
-  static void processClassAnnotation(
-      RestroGenConfig config, ClassElement classElement) {
+  static String processClassAnnotation(ClassElement classElement) {
     final annotation = _registerWebApiTc.firstAnnotationOfExact(classElement);
     String url = annotation.getField(WEB_API_PROP_URL).toStringValue();
-    if (url != null && url.isNotEmpty) {
-      config.url = url;
-    }
+    return (url != null && url.isNotEmpty) ? url : null;
   }
 
   static void processMethodHeadersAnnotation(

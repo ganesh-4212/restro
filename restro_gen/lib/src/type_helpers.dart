@@ -14,14 +14,15 @@ abstract class TypeHelpers {
     final classSourceBuilder = ClassBuilder();
     classSourceBuilder.name = '_\$${classElement.name}Impl';
     classSourceBuilder.extend = refer(classElement.displayName);
+    String urlPrefix = AnnotationHelpers.processClassAnnotation(classElement);
     for (MethodElement methodElement in classElement.methods) {
-      classSourceBuilder.methods.add(buildMethod(methodElement));
+      classSourceBuilder.methods.add(buildMethod(urlPrefix, methodElement));
     }
     return classSourceBuilder.build();
   }
 
-  static Method buildMethod(MethodElement methodElement) {
-    RestroGenConfig config = RestroGenConfig();
+  static Method buildMethod(String urlPrefix, MethodElement methodElement) {
+    RestroGenConfig config = RestroGenConfig(url: urlPrefix);
     var methodBuilder = MethodBuilder();
     methodBuilder.name = methodElement.name;
     AnnotationHelpers.processMethodAnnotations(config, methodElement);
