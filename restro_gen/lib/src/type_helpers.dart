@@ -7,6 +7,7 @@ import 'package:code_builder/code_builder.dart';
 import 'package:restro/restro.dart';
 import 'annotation_helpers.dart';
 import 'restro_gen_config.dart';
+import 'utils.dart';
 
 abstract class TypeHelpers {
   static Class buildClass(ClassElement classElement) {
@@ -30,7 +31,7 @@ abstract class TypeHelpers {
     }
     methodBuilder.annotations.add(CodeExpression(Code('override')));
     methodBuilder.returns = refer(methodElement.returnType.displayName);
-
+    Utils.buildUrlFromPathParameter(config);
     //Get code array from config;
     List<Code> codes = [];
     codes.add(Code('RestroConfig config = RestroConfig();'));
@@ -48,7 +49,8 @@ abstract class TypeHelpers {
     var parameterBuilder = ParameterBuilder();
     parameterBuilder.name = parameterElement.name;
     parameterBuilder.type = refer(parameterElement.type.displayName);
-    //TODO add parameter annotations
+    AnnotationHelpers.processMethodParamPathAnnotation(
+        config, parameterElement);
     return parameterBuilder.build();
   }
 

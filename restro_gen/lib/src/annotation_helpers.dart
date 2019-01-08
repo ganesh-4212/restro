@@ -21,6 +21,9 @@ abstract class AnnotationHelpers {
   static const TypeChecker _registerHeadersTc =
       const TypeChecker.fromRuntime(Headers);
 
+  static const TypeChecker _registerPathTc =
+      const TypeChecker.fromRuntime(Path);
+
   static const REQUEST_METHOD_URL_PROP = 'value';
   static const WEB_API_PROP_URL = 'url';
   static void processMethodAnnotations(
@@ -109,6 +112,22 @@ abstract class AnnotationHelpers {
           annotationObject.getField(REQUEST_METHOD_URL_PROP).toStringValue();
       if (methodUrl != null && methodUrl.isNotEmpty) {
         config.url += methodUrl;
+      }
+    }
+  }
+
+  static void processMethodParamPathAnnotation(
+      RestroGenConfig config, ParameterElement parameterElement) {
+    if (_registerPathTc.hasAnnotationOfExact(parameterElement)) {
+      final pathVariableValueObj = _registerPathTc
+          .firstAnnotationOfExact(parameterElement)
+          .getField(REQUEST_METHOD_URL_PROP);
+      String parameterName = parameterElement.name;
+      if (parameterName != null && parameterName.isNotEmpty) {
+        String key = pathVariableValueObj?.toStringValue()?.isNotEmpty == true
+            ? pathVariableValueObj.toStringValue()
+            : parameterName;
+        config.parameterPathMap[key] = parameterName;
       }
     }
   }
