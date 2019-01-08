@@ -8,7 +8,7 @@ abstract class GitHubService {
     {'access-token': '10', 'contentType': 'application/json'},
   )
   @GET('/user-by-name/:id/repository/:repoId')
-  Future<String> getUserName(@Path() String id, @Path()String repoId);
+  Future<String> getUserName(String repoIds, @Path() String id);
 
   Future<String> getDeletedUsers();
 }

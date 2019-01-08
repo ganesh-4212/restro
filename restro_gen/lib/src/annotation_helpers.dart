@@ -123,11 +123,14 @@ abstract class AnnotationHelpers {
           .firstAnnotationOfExact(parameterElement)
           .getField(REQUEST_METHOD_URL_PROP);
       String parameterName = parameterElement.name;
+      String pathVariableValue = parameterName;
+      if (pathVariableValueObj != null &&
+          pathVariableValueObj.toStringValue() != null &&
+          pathVariableValueObj.toStringValue().isNotEmpty) {
+        pathVariableValue = pathVariableValueObj.toStringValue();
+      }
       if (parameterName != null && parameterName.isNotEmpty) {
-        String key = pathVariableValueObj?.toStringValue()?.isNotEmpty == true
-            ? pathVariableValueObj.toStringValue()
-            : parameterName;
-        config.parameterPathMap[key] = parameterName;
+        config.parameterPathMap[pathVariableValue] = parameterName;
       }
     }
   }

@@ -8,10 +8,10 @@ part of 'web_api.dart';
 
 class _$GitHubServiceImpl extends GitHubService {
   @override
-  Future<String> getUserName(String id, String repoId) {
+  Future<String> getUserName(String repoIds, String id) {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;
-    config.url = "/user-by-name/$id/repository/$repoId";
+    config.url = "/user-by-name/$id/repository/:repoId";
     config.headers["access-token"] = "10";
     config.headers["contentType"] = "application/json";
   }
