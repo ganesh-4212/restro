@@ -12,10 +12,10 @@ abstract class TypeHelpers {
     String implemetedClassName = _getImplementationClassName(classElement.name);
     classSourceBuilder.name = implemetedClassName;
     classSourceBuilder.extend = refer(classElement.displayName);
-    
+
     ConstructorBuilder constructorBuilder = ConstructorBuilder();
-    constructorBuilder.factory =true;
-    constructorBuilder.lambda =true;
+    constructorBuilder.factory = true;
+    constructorBuilder.lambda = true;
     constructorBuilder.body = Code("$implemetedClassName()");
 
     classSourceBuilder.constructors.add(constructorBuilder.build());
@@ -62,14 +62,20 @@ abstract class TypeHelpers {
     return parameterBuilder.build();
   }
 
-  static Library processRestroSetup(Element element) {  
-    
-    List<String> classNames = [];
+  static Library processRestroSetup(Element element) {
+    Map<String, String> classNameConstructorMap = {};
+
+    String elementName = "_\$${element.name}";
+
     AnnotationHelpers.processRestroSetup(element).forEach((item) {
       final className = item.toTypeValue().name;
-      classNames.add(className+"()");
-    });    
-    final library = Library((b) => b.body.add(Code("List<dynamic> a = [${classNames.join(',')}];")));
+      classNameConstructorMap[className] = "$className()";
+    });
+    String codeString = "Restro $elementName = Restro()";
+    classNameConstructorMap.forEach((key, value) {
+      codeString += "..registerService<$key>($key, $value)";
+    });
+    final library = Library((b) => b.body.add(Code("$codeString;")));
 
     return library;
   }
