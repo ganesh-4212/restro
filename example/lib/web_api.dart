@@ -3,7 +3,7 @@ import 'package:restro/restro.dart';
 part 'web_api.g.dart';
 
 @WebApi(url: '/secure/users/:userId')
-class GitHubService {
+abstract class GitHubService {
 
   factory GitHubService() => _$GitHubServiceImpl();
 

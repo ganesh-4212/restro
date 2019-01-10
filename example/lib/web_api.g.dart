@@ -7,6 +7,8 @@ part of 'web_api.dart';
 // **************************************************************************
 
 class _$GitHubServiceImpl extends GitHubService {
+  factory _$GitHubServiceImpl() => _$GitHubServiceImpl();
+
   @override
   Future<String> getUserName(String repoIds, String id, String userId) {
     RestroConfig config = RestroConfig();

@@ -9,8 +9,16 @@ import 'method_code_builder.dart';
 abstract class TypeHelpers {
   static Class buildClass(ClassElement classElement) {
     final classSourceBuilder = ClassBuilder();
-    classSourceBuilder.name = _getImplementationClassName(classElement.name);
+    String implemetedClassName = _getImplementationClassName(classElement.name);
+    classSourceBuilder.name = implemetedClassName;
     classSourceBuilder.extend = refer(classElement.displayName);
+    
+    ConstructorBuilder constructorBuilder = ConstructorBuilder();
+    constructorBuilder.factory =true;
+    constructorBuilder.lambda =true;
+    constructorBuilder.body = Code("$implemetedClassName()");
+
+    classSourceBuilder.constructors.add(constructorBuilder.build());
     String urlPrefix = AnnotationHelpers.processClassAnnotation(classElement);
     for (MethodElement methodElement in classElement.methods) {
       classSourceBuilder.methods.add(buildMethod(urlPrefix, methodElement));
