@@ -88,3 +88,8 @@ class Headers {
   final Map<String, String> value;
   const Headers([this.value = const {}]);
 }
+
+class RestroSetup {
+  final List<Type> value;
+  const RestroSetup([this.value = const []]);
+}

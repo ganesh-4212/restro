@@ -27,6 +27,8 @@ abstract class AnnotationHelpers {
   static const TypeChecker _registerQueryTc =
       const TypeChecker.fromRuntime(Query);
 
+  static const TypeChecker _registerRestroSetupTc = const TypeChecker.fromRuntime(RestroSetup);
+
   static const REQUEST_METHOD_URL_PROP = 'value';
   static const WEB_API_PROP_URL = 'url';
   static void processMethodAnnotations(
@@ -160,5 +162,13 @@ abstract class AnnotationHelpers {
       return true;
     }
     return false;
+  }
+  static List<DartObject> processRestroSetup(Element element){
+    List<DartObject> types = [];
+    if(_registerRestroSetupTc.hasAnnotationOfExact(element)){
+      final annotation = _registerRestroSetupTc.firstAnnotationOfExact(element);
+     types =annotation.getField(REQUEST_METHOD_URL_PROP).toListValue();
+    }
+    return  types;
   }
 }

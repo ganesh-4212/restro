@@ -17,7 +17,7 @@ class _$GitHubServiceImpl extends GitHubService {
   }
 
   @override
-  Future<String> getDeletedUsers(
+  Future<String> getDeletedUserss(
       String userId, String secondArg, String queryArg) {
     RestroConfig config = RestroConfig();
     config.method = RequestMethod.GET;

@@ -12,3 +12,11 @@ builders:
     auto_apply: dependents
     build_to: cache
     applies_builders: ["source_gen|combining_builder"]
+
+  restro_setup:
+    import: "package:restro_gen/builder.dart"
+    builder_factories: ["restroSetup"]
+    build_extensions: {".dart": [".restro_setup.g.part"]}
+    auto_apply: dependents
+    build_to: cache
+    applies_builders: ["source_gen|combining_builder"]
